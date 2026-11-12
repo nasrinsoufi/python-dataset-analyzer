@@ -7,6 +7,10 @@ from src.dataset_analyzer.visualizer import (
     plot_boxplot,
     plot_bar_chart
 )
+from src.dataset_analyzer.reporter import (
+    generate_json_report,
+    generate_html_report
+)
 
 data = load_csv("sample_data/sample.csv")
 
@@ -49,3 +53,30 @@ print("\nGenerated Charts:")
 print(histogram_path)
 print(boxplot_path)
 print(bar_chart_path)
+
+
+# Generate JSON report
+chart_paths = [
+    histogram_path,
+    boxplot_path,
+    bar_chart_path
+]
+
+json_report_path = generate_json_report(
+    inspection=inspection,
+    statistics=statistics,
+    outliers=outlier_results,
+    chart_paths=chart_paths
+)
+
+print("\nJSON Report Generated:")
+print(json_report_path)
+
+
+# Generate HTML report
+html_report_path = generate_html_report(
+    json_file=json_report_path
+)
+
+print("\nHTML Report Generated:")
+print(html_report_path)
