@@ -220,12 +220,8 @@ The test suite covers individual modules, error handling, command-line arguments
 
 **Nasrin Soufi**
 
-Python Developer | AI Engineering Enthusiast
-
 [GitHub](https://github.com/nasrinsoufi)
 
 [Portfolio](https://www.nasrin-soufi.ir)
 
----
 
-*This project was developed as part of a practical Python and AI Engineering learning journey, with an emphasis on modular architecture, data processing, automated testing, and reusable software components.*
