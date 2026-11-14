@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 import main as cli
+import json
 
 
 def test_cli_default_arguments():
@@ -113,3 +114,52 @@ def test_main_raises_error_for_missing_input(tmp_path):
             "--input", str(missing_file),
             "--output", str(tmp_path / "results")
         ])
+
+
+def test_cli_end_to_end(tmp_path):
+    input_file = tmp_path / "input.csv"
+    output_dir = tmp_path / "results"
+
+    csv_content = """name,age,salary,department
+Ali,28,2500,IT
+Sara,32,3200,HR
+Reza,25,2200,IT
+Mina,35,4100,Finance
+Nima,29,3000,Marketing
+"""
+
+    input_file.write_text(csv_content, encoding="utf-8")
+
+    cli.main([
+        "--input", str(input_file),
+        "--output", str(output_dir)
+    ])
+
+    expected_files = [
+        "age_histogram.png",
+        "salary_boxplot.png",
+        "department_bar_chart.png",
+        "report.json",
+        "report.html"
+    ]
+
+    for filename in expected_files:
+        assert (output_dir / filename).is_file()
+
+    report_path = output_dir / "report.json"
+
+    with report_path.open("r", encoding="utf-8") as file:
+        report = json.load(file)
+
+    assert report["dataset_overview"]["rows"] == 5
+    assert report["dataset_overview"]["columns"] == 4
+
+    assert report["statistical_analysis"]["age"]["mean"] == pytest.approx(29.8)
+
+    assert len(report["charts"]) == 3
+
+    html_content = (
+        output_dir / "report.html"
+    ).read_text(encoding="utf-8")
+
+    assert "age_histogram.png" in html_content
